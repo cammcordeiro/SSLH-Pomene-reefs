@@ -1,0 +1,858 @@
+---
+title: "Baseline assessment of coral reefs from the Inhambane Province, Mozambique" 
+author: "Cesar AMM Cordeiro, Marcos B Lucena, Katia Capel"
+date: "September 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+set.seed(13)
+
+source("~/github/script/relatorio data wrangling.R")
+
+library(patchwork)
+
+get_legend <- function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+## Scientific Report
+
+# This is an R Markdown document with contains the analysis and results for the manuscript of the scientific assessement made in 2019.
+
+# The first steps in calculating statistic indicators are listed below, followed by the main patterns in species richness according to gradients evaluated.
+
+```
+
+#### INTRODUCTION
+
+# Mozambique coast
+  Area, ecosystems, occupation, rich fauna
+
+# Reef areas
+  Main formations, area, exploration, threats 
+
+# Previous information
+  Scope of previous work, gaps
+
+# Objectives
+
+•	Describe the benthic composition of surveyied reef according to relative cover and composition;
+•	Quantify and characterise the reef fish assemblages indicating dominant species and fuctional groups;
+• Report any impacts currently having an effect on these communities that can be identified through observation.
+
+
+##### METHODS
+
+## Study site
+
+## Benthic and macrofauna 
+
+## Reef fish assemblages
+
+
+##### RESULTS
+
+Figure 1. map
+
+
+```{r fig2 benthos}
+
+###
+## BENTHIC COVER RICHNESS
+
+# Plot richness
+benthos_richness <- dados1 %>% 
+  mutate(uniqueID = paste(local, site, transecto, sep = "_")) %>% 
+  aggregate(spp.Name ~ uniqueID + local, ., function(x) length(unique(x))) %>%
+  mutate(local = mapvalues(local, from = "Zambia", to = "Baixo Zambia")) %>% 
+  mutate(local = factor(local, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=local, y=spp.Name), outlier.shape = "") +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=local)) +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_blank(),
+        #axis.text.y=element_blank(),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(size=12, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="",
+        plot.title = element_text(color="red", size=14, face="bold.italic")) +
+  labs(x="", y="", title = "Benthic cover") +
+  labs(x="", y="") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+ 
+## BENTHIC COVER DIVERSITY
+benthos_simpson <- data.frame(wideb[,1:3], simpson=diversity(wideb[,4:81], index='simpson')) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=simpson), outlier.shape = "") +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_blank(),
+        #axis.text.y=element_blank(),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(size=12, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+  labs(x="", y="") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+## BENTHIC COVER EVENNESS
+benthos_evenness <- data.frame(wideb[,1:3], eveness=diversity(wideb[,4:81])/log(specnumber(wideb[,4:81]))) %>% mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=eveness), outlier.shape = "") +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(size=12, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+  labs(x="", y="") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+## MACROFAUNA RICHNESS
+macro_spp_richness <- aggregate(taxon ~ locality + unique_eventID, macrofauna, function(x) length(unique(x))) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=taxon), outlier.shape = "") + #geom_boxplot() +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_blank(),
+        #axis.text.y=element_blank(),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(size=12, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="",
+        plot.title = element_text(color="red", size=14, face="bold.italic")) +
+  labs(x="", y="", title = "Invertebrate megafauna") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+## MACROFAUNA DIVERSITY
+macro_simpson <- data.frame(wide_macro[,1:3], simpson=diversity(wide_macro[,4:29], index='simpson')) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=simpson), outlier.shape = "") +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_blank(),
+        #axis.text.y=element_blank(),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(size=12, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+  labs(x="", y="") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa")) 
+
+
+## MACROFAUNA EVENNESS
+macro_eveness <- data.frame(wide_macro[,1:3], eveness=diversity(wide_macro[,4:29])/log(specnumber(wide_macro[,4:29]))) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=eveness), outlier.shape = "") +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+        #axis.text.y=element_blank(),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(size=12, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+  labs(x="", y="") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+# FISH RICHNESS
+fish_richness <- aggregate(taxa_concat ~ locality + unique_eventID, fish, function(x) length(unique(x))) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=taxa_concat), outlier.shape = "") +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  theme_classic() +
+  theme(axis.text.y = element_text(size=12, angle=0, hjust = 1, vjust = 0.5),
+        axis.text.x = element_blank(),
+        strip.text = element_text(face = "italic"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="",
+        plot.title = element_text(color="red", size=14, face="bold.italic")) +
+  labs(x="", y="Species richness", title = "Fish assemblage") # + 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+# FISH DIVERSITY (SIMPSON)
+fish_simpson <- data.frame(widef[,1:3], simpson=diversity(widef[,4:213], index='simpson')) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=simpson), outlier.shape = "") + 
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  theme_classic() +
+  theme(axis.text.y = element_text(size=12, angle=0, hjust = 1, vjust = 0.5),
+                axis.text.x = element_blank(),
+                strip.text = element_text(face = "italic"),
+                axis.title=element_text(size=12, face="bold"),
+                legend.position="") +
+  labs(x="", y="Simpson index") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+# FISH EVENNESS
+fish_eveness <- data.frame(widef[,1:3], eveness = diversity(widef[,4:213])/log(specnumber(widef[,4:213]))) %>%
+  mutate(locality = factor(locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  ggplot(aes(x=locality, y=eveness), outlier.shape = "") +
+  geom_boxplot(alpha = 0.3, width = 0.4) +
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=locality)) +
+  theme_classic() +
+  theme(axis.text.y = element_text(size=12, angle=0, hjust = 1, vjust = 0.5),
+        axis.text.x = element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+        strip.text = element_text(face = "italic"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+  labs(x="", y="Eveness (J')") #+ 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa")) # + ylim(0.9,1)
+
+
+```
+
+
+## Macrobenthic fauna
+
+```{r fig2 macrofauna }
+
+##### Benthic cover
+# Benthos richness per site
+dados1 %>% 
+  mutate(uniqueID = paste(local, site, transecto, sep = "_")) %>% 
+  aggregate(spp.Name ~local, ., function(x) length(unique(x))) 
+
+# ANOVA benthos richness
+dados1 %>% 
+  mutate(uniqueID = paste(local, site, transecto, sep = "_")) %>% 
+  aggregate(spp.Name ~ uniqueID + local, ., function(x) length(unique(x))) %>%
+    mutate(local = mapvalues(local, from = "Zambia", to = "Baixo Zambia")) %>% 
+  aov(spp.Name ~ local, .) %>% TukeyHSD("local")
+  #glm(taxon ~ locality, ., family = 'poisson') %>% car::Anova()
+  
+# Evenness benthos ANOVA
+data.frame(wideb[,1:3], eveness=diversity(wideb[,4:81])/log(specnumber(wideb[,4:81]))) %>%
+  aov(eveness ~ locality, .) %>% TukeyHSD()
+  
+# ANOVA benthos Simpson
+data.frame(wideb[,1:3], simpson=diversity(wideb[,4:81], index='simpson')) %>%
+  aov(simpson ~ locality, .) %>% TukeyHSD("locality")
+
+## MACROFAUNA DENSITY
+macrofauna %>% 
+  filter(! class %in% c("-")) %>% 
+  aggregate(number ~ locality + unique_eventID, ., sum) %>% 
+  group_by(locality) %>% 
+  summarise(mean(number), sd(number))
+
+macrofauna %>% 
+  filter(! class %in% c("-")) %>% 
+  aggregate(number ~ locality + unique_eventID, ., sum) %>%
+  aov(number ~ locality, .) %>% summary()
+
+
+#######
+# ANOVA richness macrofauna
+aggregate(taxon ~ locality + unique_eventID, macrofauna, function(x) length(unique(x))) %>%
+  aov(taxon ~ locality, .) %>% summary()
+  #glm(taxon ~ locality, ., family = 'poisson') %>% car::Anova()
+  
+
+# ANOVA diversity macrofauna
+data.frame(wide_macro[,1:3], simpson=diversity(wide_macro[,4:29], index='simpson')) %>% 
+  lm(simpson ~ locality, .) %>% anova()
+
+# ANOVA evenness macrofauna
+data.frame(wide_macro[,1:3], eveness=diversity(wide_macro[,4:29])/log(specnumber(wide_macro[,4:29]))) %>%
+  lm(eveness ~ locality, .) %>% anova()
+
+# ANOVA fish richness
+aggregate(taxa_concat ~ locality + unique_eventID, fish, function(x) length(unique(x))) %>% 
+  lm(taxa_concat ~ locality, .) %>% 
+  anova()
+
+
+# ANOVA fish diversity
+data.frame(widef[,1:3], simpson=diversity(widef[,4:213], index='simpson')) %>% 
+  lm(simpson ~ locality, .) %>% 
+  anova()
+
+
+# ANOVA fish evenness
+data.frame(widef[,1:3], evenness = diversity(widef[,4:213])/log(specnumber(widef[,4:213]))) %>% 
+  lm(evenness ~ locality, .) %>% 
+  anova()
+
+
+# ANOVA fish abundance
+aggregate(abundance ~ locality + unique_eventID, fish, sum) %>%
+  lm(abundance ~ locality, .) %>% 
+  anova()
+
+```
+
+## Fish assemblage
+
+```{r figure 2}
+
+## FIGURE 2
+
+(fish_richness + benthos_richness + macro_spp_richness) / 
+  (fish_simpson + macro_simpson + benthos_simpson) / 
+  (fish_eveness + macro_eveness + benthos_evenness) + plot_layout(nrow = 3, byrow = T)
+
+```
+
+```{r figure 3}
+
+### FIGURE 3
+
+#
+dados1 %>% 
+  mutate(local = mapvalues(local, from = "Zambia", to = "Baixo Zambia")) %>%
+  mutate(unique_eventID = paste(local, site, transecto, sep = "_"),
+         local = factor(local, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))) %>% 
+  aggregate(Cov..per.species ~ MFG + site + local + unique_eventID, ., mean) %>% 
+  dplyr::rename(locality = local,
+                cover_rel = Cov..per.species) %>%
+  ggplot(., aes(x=MFG, y=cover_rel)) +
+  geom_boxplot(width = 0.4, alpha=0.8, outlier.shape = "") + 
+  geom_jitter(width = 0.1, alpha=0.5, aes(color=MFG), size = 0.7) +
+  facet_grid(locality ~.) +
+  scale_fill_brewer(palette="Set3") +
+  theme_classic() +
+  theme(axis.text.x=element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+        axis.text.y=element_text(size=12, angle=0, hjust = 0.5, vjust = 0.5),
+        strip.text = element_text(size=12),#, face = "bold"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+  labs(x="", y="Cover (%)", fill="")
+
+# Morpho-functional groups
+# mfg_boxplot <- longb %>% 
+#   dplyr::rename(cover_rel = Cov..per.species) %>% 
+#   ggplot(., aes(x=MFG1, y=cover_rel)) +
+#     geom_boxplot(width = 0.4, alpha=0.8, outlier.shape = "") + 
+#     geom_jitter(width = 0.1, alpha=0.5, aes(color=MFG1), size = 0.7) +
+#     facet_grid(locality ~.) +
+#     scale_fill_brewer(palette="Set3") +
+#   theme_classic() +
+#     theme(axis.text.x=element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+#         axis.text.y=element_text(size=12, angle=0, hjust = 0.5, vjust = 0.5),
+#         strip.text = element_text(size=12),#, face = "bold"),
+#         axis.title=element_text(size=12, face="bold"),
+#         legend.position="") +
+#     labs(x="", y="Cover (%)", fill="")
+
+```
+
+
+```{r figure4 }
+
+### FIGURE 4
+
+# macro density
+macro_density <- macrofauna %>% 
+  filter(! class %in% c("-")) %>% 
+  aggregate(number ~ locality + unique_eventID, ., sum) %>% 
+  ggplot(aes(x=locality, y=number), outlier.shape = "") +
+  geom_boxplot(alpha = 0.3, width = 0.6) +
+  geom_jitter(width = 0.1, alpha=0.5) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_blank(),
+        axis.text.y=element_text(size=12, angle=0, hjust = 0.5, vjust = 0.5),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(face = "italic"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="right") +
+  labs(x="", y="Density (n.100m-2)", title = "(A)") + 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+# Macrofauna per class
+macro_rel_class <- macrofauna %>% 
+  filter(! class %in% c("-")) %>% 
+  aggregate(number ~ class + locality, ., sum)  %>% 
+  ggplot(aes(x=locality, y=number, fill=class)) +
+  geom_bar(stat="identity", position="fill", width = 0.6) +
+  scale_fill_brewer(palette="Set1") + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black"), 
+        axis.text.x=element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+        axis.text.y=element_text(size=12, angle=0, hjust = 0.5, vjust = 0.5),
+        axis.text=element_text(size=12), 
+        strip.text = element_text(face = "italic"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="bottom") +
+  labs(x="", y="Relative abundance", fill="", title = "(C)") + 
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+## fish trophic
+fish_trophic <- teste %>% 
+  filter(!is.na(Diets)) %>%
+  aggregate(abundance ~ Diets + locality, ., sum)  %>% 
+    ggplot(aes(x=locality, y=abundance, fill=Diets)) +
+    geom_bar(stat="identity", position="fill", width = 0.6) +
+    scale_fill_brewer(palette="Set2") + 
+  theme_classic() +
+  theme(axis.text.y = element_text(size=12, angle=0, hjust = 1, vjust = 0.5),
+        axis.text.x = element_text(size=12, angle=90, hjust = 1, vjust = 0.5),
+        strip.text = element_text(face = "italic"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="bottom") +
+    labs(x="", y="", fill="", title = "(D)") + 
+    scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+## FISH DENSITY
+fish_abund <- aggregate(abundance ~ locality + unique_eventID, fish, sum) %>%
+  ggplot(aes(x=locality, y=abundance)) +
+  geom_boxplot(alpha = 0.3, width = 0.6) +
+  geom_jitter(width = 0.1, alpha=0.5) +
+  theme_classic() +
+  theme(axis.text.y = element_text(size=12, angle=0, hjust = 1, vjust = 0.5),
+        axis.text.x = element_blank(),
+        strip.text = element_text(face = "italic"),
+        axis.title=element_text(size=12, face="bold"),
+        legend.position="") +
+    labs(x="", y="", title = "(B)") +
+  scale_x_discrete(limits=c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
+
+
+## PLOT (10x6)
+
+get_legend <- function(myggplot){
+  tmp <- ggplot_gtable(ggplot_build(myggplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)
+}
+
+
+legenda_fish <- get_legend(fish_trophic)
+legenda_macro <- get_legend(macro_rel_class)
+
+fish_trophic_nl <- fish_trophic + theme(legend.position = "")
+macro_rel_class_nl <- macro_rel_class + theme(legend.position = "")
+
+#
+macro_density + fish_abund + macro_rel_class_nl + fish_trophic_nl + 
+  legenda_macro + legenda_fish +
+  plot_layout(nrow = 3, heights = c(2, 2, 0.5), byrow = T)
+
+```  
+
+#### Similarities among areas
+
+```{r figure 5}
+
+# benthic cover
+NMDS_b <- metaMDS(asin(sqrt(widemfg[, 4:11]/100)), distance = "bray", autotransform=F, try = 50)
+benthos.scores <- as.data.frame(scores(NMDS_b, "species")) %>% 
+  tibble::rownames_to_column(., "MFG")
+
+benthos_mds <- data.frame(NMDS_b$points) %>% 
+  mutate(site = wideb$locality) %>% 
+  group_by(site) %>% 
+  dplyr::slice(chull(MDS1, MDS2)) %>% 
+  ggplot(., aes(x=MDS1, y=MDS2)) + 
+  geom_polygon(alpha = 0.7, aes(fill = site)) +
+  theme_classic() + 
+  theme(legend.title = element_blank(),
+        legend.position = "") +
+  labs(x='MDS 1', y='MDS 2', title = "Benthic cover") +
+  geom_point(data = data.frame(NMDS_b$points), aes(x=MDS1, y=MDS2), 
+             color = "black", shape = 3, size = 0.5, alpha = 0.3) +
+      annotate("text", x = -0.3, y = -0.2, cex = 3, label = paste("stress = ", round(NMDS_b$stress, 2)))
+
+
+
+# macrofauna
+NMDS_m <- metaMDS(wide_macro[,4:29], distance = "bray", autotransform=T, try = 50)
+macro.scores <- as.data.frame(scores(NMDS_m, "species")) %>% 
+  tibble::rownames_to_column(., "spp")
+
+macro_mds <- data.frame(NMDS_m$points) %>% 
+  mutate(site = wide_macro$locality) %>% 
+  group_by(site) %>% 
+  dplyr::slice(chull(MDS1, MDS2)) %>% 
+  ggplot(., aes(x=MDS1, y=MDS2)) + 
+  geom_polygon(alpha = 0.7, aes(fill = site)) +
+  theme_classic() +
+  theme(legend.title = element_blank(),
+        legend.position = "") +
+  labs(x='NMDS 1', y='NMDS 2', title = "Invertebrate megafauna") +
+  geom_point(data = data.frame(NMDS_m$points), 
+             aes(x=MDS1, y=MDS2), color = "black", shape = 3, size = 0.5, alpha = 0.3) + 
+    annotate("text", x = -1, y = -1, cex = 3, label = paste("stress = ", round(NMDS_m$stress, 2)))
+
+
+# fish
+NMDS <- metaMDS(widef_sel[,4:40], distance = "bray", autotransform=T, try = 50)
+
+# species scores
+fish.scores <- as.data.frame(scores(NMDS, "species")) %>% 
+  tibble::rownames_to_column(., "taxa_concat") %>% 
+  inner_join(unique(teste[,c("taxa_concat", "Diets")]) %>% 
+      filter(!is.na(Diets)) %>% 
+      rbind(data.frame(taxa_concat = c("Acanthurus sp", "Bodianus sp", "Caranx sp","Coris sp", "Gobiidae sp", "Gymnothorax sp","Halichoeres sp", "Kyphosus sp", "Macropharyngodon sp","Scorpaenopsis sp", "Synodus sp"), Diets = c("HD", "IM", "FC", "IM", "IM", "FC", "IM", "HD", "IM", "FC", "FC")))) 
+
+
+fish_mds <- data.frame(NMDS$points) %>% 
+  mutate(site = as.character(widef$locality)) %>% 
+  group_by(site) %>% 
+  dplyr::slice(chull(MDS1, MDS2)) %>% 
+  ggplot(., aes(x=MDS1, y=MDS2)) + 
+  geom_polygon(alpha = 0.7, aes(fill = site)) +
+  theme_classic() + 
+  theme(legend.title = element_blank(),
+        legend.position = "") +
+  labs(x='NMDS 1', y='NMDS 2', title = "Fish assemblage") +
+  geom_point(data = data.frame(NMDS$points), aes(x=MDS1, y=MDS2), 
+             shape = 3, size = 0.5, alpha = 0.3) +
+    annotate("text", x = -1, y = -1, cex = 3, label = paste("stress = ", round(NMDS$stress, 2)))
+
+
+
+
+legenda_5 <- get_legend(data.frame(NMDS$points) %>% 
+                        mutate(site = as.character(widef$locality)) %>%
+                        group_by(site) %>% 
+                        dplyr::slice(chull(MDS1, MDS2)) %>% 
+                        ggplot(., aes(x=MDS1, y=MDS2)) + 
+                        geom_point(shape = 21, size = 1, aes(color=site)) +
+                        geom_polygon(alpha = 0.5, aes(fill = site)) +
+                        theme_classic() + 
+                        theme(legend.title = element_blank(),
+                              legend.position = "right") +
+                        labs(x='MDS 1', y='MDS 2', title = "(C)"))
+
+
+## Plot
+benthos_mds + macro_mds + fish_mds + legenda_5 + plot_layout(ncol = 2)
+
+```
+
+
+```{r multivar_analysis}
+
+## benthic cover
+#
+betadisper(vegdist(wideb[, 4:81], method = "euclidian"), group = wideb$locality) %>% anova() #TukeyHSD()
+
+#
+adonis(wideb[, 4:81] ~ locality + depth_m, wideb, permutations = 4999, strata = wideb$site)
+
+
+## megafauna 
+#
+betadisper(vegdist(wide_macro[, 4:29], method = "bray"), group = wide_macro$locality) %>% anova() #TukeyHSD()
+
+#
+adonis(wide_macro[, 4:29] ~ locality, wide_macro, permutations = 4999, strata = wide_macro$site)
+
+## fish
+# test dispersion homogeneity
+betadisper(vegdist(widef_sel[, 4:ncol(widef_sel)], method = "bray"), group = widef_sel$locality) %>% 
+  anova()
+
+# test multivariate variance
+adonis(widef_sel[, 4:39] ~ locality, widef_sel, permutations = 4999, strata = widef_sel$site) 
+
+```
+
+####  Figure 6 and table 1 of trophic groups
+
+```{r figure 6 size-trophic}
+
+### FIGURE 6
+
+# FISH SIZE AND TROPHIC GROUP
+size_trophic_fish <- subset(teste, ! is.na(Diets)) %>% 
+  aggregate(size_cm_TL ~ taxa_concat + eventID + locality + Diets, ., mean) %>% 
+  ggplot(., aes(x=locality, y=size_cm_TL)) +
+    geom_jitter(width = 0.2, alpha=0.5, aes(color="black")) +
+    geom_boxplot(outlier.shape = NA, notch = F, width=0.5, alpha=0.5) +
+    theme_classic() + 
+    theme(legend.position = "", 
+        axis.text.x=element_text(angle=90, hjust=1, vjust=0.5, size=12),
+        axis.text=element_text(size=12)) +
+    labs(x="", y="Size (cm)") + 
+    facet_wrap(~ Diets, ncol=3, scales = 'free_y')
+
+
+## ANOVA trophic group
+subset(teste, ! is.na(Diets)) %>% 
+  aggregate(size_cm_TL ~ taxa_concat + eventID + locality + Diets, ., mean) %>% 
+  split(.$Diets) %>%
+  map(~ aov(size_cm_TL ~ locality, data=.)) %>%
+  map(summary) # %>% map_dbl("r.squared")
+
+# only IM
+subset(teste, ! is.na(Diets)) %>% 
+  aggregate(size_cm_TL ~ taxa_concat + eventID + locality + Diets, ., mean) %>%
+  filter(Diets == "IM") %>% 
+  aov(size_cm_TL ~ locality, data=.) %>% summary
+  #TukeyHSD("locality")
+  
+  
+### Table 1 - FISH SPECIES RICHNESS PER TROPHIC GROUP
+teste %>% 
+  filter(!is.na(Diets)) %>% 
+  droplevels() %>% 
+  aggregate(taxa_concat ~ Diets + locality, ., function(x) length(unique(x))) %>%
+  dcast(locality ~ Diets, value.var = "taxa_concat", sum) %>% 
+  knitr::kable(.) 
+
+```
+
+
+# Table 2 - invertebrate megafauna mean density
+```{r table2}
+
+## table 2 (mean +- sd)
+macrofauna %>% 
+  mutate(uniqueID = paste(locality, site, transect, sep = "_")) %>% 
+  dplyr::select(locality, taxon, number, uniqueID) %>% 
+  group_by(taxon, locality) %>% 
+  summarise(average = round(mean(number), 2), std = round(sd(number), 2)) %>% 
+  pivot_wider(names_from = locality, values_from = c(average, std)) %>%
+  inner_join(macrofauna[, c('phylum', 'taxon')]) %>% 
+  dplyr::select(phylum, taxon, average_Pomene:`std_Baixo Zambia`) %>% 
+  distinct() %>% 
+  data.frame()
+```
+
+
+
+# Mantel test
+```{r mantel_test}
+distb <- widemfg %>%
+    group_by(site) %>%
+    dplyr::select(-site, -unique_eventID, -locality) %>%
+    summarise_all(.funs=mean) %>%
+    column_to_rownames('site') %>% 
+  vegdist(., method = 'bray')
+
+distf <- widef %>%
+  group_by(site) %>%
+  dplyr::select(-site, -unique_eventID, -locality) %>%
+  summarise_all(.funs=mean) %>%
+  column_to_rownames('site') %>% 
+  vegdist(., method = 'bray')
+
+distm <- wide_macro %>%
+  group_by(site) %>%
+  dplyr::select(-site, -unique_eventID, -locality) %>%
+  summarise_all(.funs=mean) %>%
+  column_to_rownames('site') %>% 
+  vegdist(., method = 'bray')
+
+## mantel test
+ape::mantel.test(as.matrix(distb), as.matrix(distf), 
+                 graph = TRUE, nperm = 4999,
+                 xlab = "z-statistic", ylab = "Density",
+                 sub = "The vertical line shows the observed z-statistic",
+                 main = "Mantel test", las=1)
+
+ape::mantel.test(as.matrix(distb), as.matrix(distm), 
+                 graph = TRUE, nperm = 4999,
+                 xlab = "z-statistic", ylab = "Density",
+                 sub = "The vertical line shows the observed z-statistic",
+                 main = "Mantel test", las=1)
+
+ape::mantel.test(as.matrix(distf), as.matrix(distm), 
+                 graph = TRUE, nperm = 4999,
+                 xlab = "z-statistic", ylab = "Density",
+                 sub = "The vertical line shows the observed z-statistic",
+                 main = "Mantel test", las=1)
+
+
+### cophenetic
+
+cor_cophenetic(hclust(distf), hclust(distb))
+
+#
+wide_macro %>%
+  group_by(locality) %>%
+  dplyr::select(-site, -unique_eventID, -locality) %>%
+  summarise_all(.funs=mean) %>%
+  column_to_rownames('locality') %>%
+  vegdist(., method = 'bray') %>% 
+  hclust(., method = "ward.D2") %>% 
+  cophenetic() %>% 
+  cor(wide_macro %>%
+        group_by(locality) %>%
+        dplyr::select(-site, -unique_eventID, -locality) %>%
+        summarise_all(.funs=mean) %>%
+        column_to_rownames('locality') %>%
+        vegdist(., method = 'bray'))
+```
+
+#### Aknowlegments
+
+ANAC, Natura, Wiori, Sanctuary, Museu de História Natural de Moçambique
+
+#### Anexum
+Table 1s - sampling effort
+
+```{r table 1s}
+
+## sampling effort
+# benthic cover
+wideb %>% 
+  aggregate(unique_eventID ~ locality, ., function(x) length(unique(x))*3 + 5)
+
+# invertebrate megafauna
+wide_macro %>% 
+  aggregate(unique_eventID ~ locality, ., function(x) length(unique(x)))
+
+# fish
+fish %>% 
+  aggregate(unique_eventID ~ locality, ., function(x) length(unique(x)))
+
+```
+
+Table 2s - benthic cover 
+```{r table 2s}
+## table 2s - benthic cover
+dados1 %>% 
+  mutate(local = mapvalues(local, from = "Zambia", to = "Baixo Zambia")) %>% 
+  mutate(uniqueID = paste(local, site, transecto, sep = "_"),
+         local = factor(local, levels = c("Baixo Silvia", "Pomene", "Baixo Zambia", "Baixo Africa"))) %>% 
+  dplyr::select(local, spp.Name, `Cov..per.species`, uniqueID) %>% 
+  group_by(spp.Name, local) %>% 
+  summarise(average = round(mean(`Cov..per.species`), 2), std = round(sd(`Cov..per.species`), 2)) %>% 
+  pivot_wider(names_from = local, values_from = c(average, std)) %>% 
+  left_join(dados1[,c("spp.Name","MFG")]) %>% 
+  data.frame() 
+#%>% write.csv(., "/Users/cesarcordeiro/Google Drive/PUBLICACOES/POMENE-SSLH/Paper Pomene/table_2s.csv", row.names = F)
+
+```
+
+
+# Table 3s. Summary for fish species on each study sites.
+```{r species list, echo=FALSE}
+
+fish %>% 
+  dplyr::select(locality, taxa_concat, unique_eventID, abundance) %>% 
+  group_by(taxa_concat, locality) %>% 
+  summarise(average = round(mean(abundance), 2), std = round(sd(abundance)/sqrt(112), 2)) %>% 
+  pivot_wider(names_from = locality, values_from = c(average, std)) %>%
+  inner_join(distinct(teste[,c("taxa_concat", "family", "Diets")])) %>%
+#%>% write.csv(., "/Users/cesarcordeiro/Google Drive/PUBLICACOES/POMENE-SSLH/Paper Pomene/table_3s.csv", row.names = F)
+
+```
+
+
+# Figure 4s - FISH RAREFACTION
+
+```{r figure4s}
+## 
+matrizPA <- aggregate(abundance ~ locality + taxa_concat + unique_eventID, fish, sum) %>%
+  dcast(taxa_concat ~ locality, value.var = "abundance", sum)
+rownames(matrizPA) <- matrizPA[,1]  
+
+#
+iNEXT(matrizPA[,-1], q=0, datatype="abundance") %>%
+  ggiNEXT(se=TRUE, facet.var="none", color.var="site", grey=FALSE) + 
+  theme_classic() + labs(y="Species richness")
+
+```  
+  
+
+
+
+# EXTRA TABLES
+```{r fish PA, include=FALSE}
+# species list
+  tabela <- dcast(data=fish, family + taxa_concat ~ locality, value.var = "species", length) 
+  tabela1 <- ifelse(tabela[,3:ncol(tabela)] > 0, "X", "-") %>% data.frame()
+  tabela2 <- cbind(tabela[,1:2], tabela1)
+  colnames(tabela2) <- c("Family","Species", "Baixo Silvia", "Pomene", "Baixo Zambia", "Baixo Africa")
+
+  knitr::kable(tabela2) 
+
+```
+
+
+```{r fishes, echo=FALSE}
+# number of fish species per site
+knitr::kable(aggregate(taxa_concat ~ locality, fish, function(x) length(unique(x))), caption = "Total richness of species on each study sites.")
+
+
+# remember to change file 'teste' when fixed for missing merged levels
+passo1 <- cbind(aggregate(size_cm_TL ~ Diets + taxa_concat + family, teste, mean)[,c(1:3)],
+                aggregate(size_cm_TL ~ Diets + taxa_concat + family, teste, mean)[4] %>% round(2), # mean size
+                aggregate(size_cm_TL ~ Diets + taxa_concat + family, teste, sd)[4] %>% round(2), # sd size
+                #aggregate(abundance ~ Diets + taxa_concat + family, teste, sum)[4] %>% colSums, # total fishes observed
+                (aggregate(abundance ~ Diets + taxa_concat + family, teste, sum)[4]/65.84) %>% round(2)# relative abundace
+          )
+
+names(passo1) <- c("TG","Species","Family","Mean size","se","rel_abund")
+
+fo <- data.frame(names(widef[,4:ncol(widef)]), colSums(widef[,4:ncol(widef)]) / nrow(widef)*100 %>% t())
+names(fo) <- c("Species","FO")
+
+tabela_sp <- left_join(passo1, fo, by = "Species")
+tabela_sp$FO <- round(tabela_sp$FO, 2)
+tabela_all <- tabela_sp[,c(3,2,1,4:7)]
+
+knitr::kable(tabela_all)
+```
+
+
+```{r megafauna}
+
+## table extra (total abundance) - invertebrate megafauna
+wide1 <- wide_macro %>% 
+  group_by(locality) %>% 
+  dplyr::select(-site, -unique_eventID) %>% 
+  summarise_all(sum)
+
+wide1 %>%
+  gather(key = taxon, value = value, 2:ncol(wide1)) %>% 
+  spread(key = names(wide1)[1], value = "value") %>% 
+  inner_join(macrofauna[, c('phylum', 'taxon')]) %>% 
+  dplyr::select(phylum, taxon, `Baixo Silvia`, Pomene, `Baixo Zambia`, `Baixo Africa`) %>% 
+  distinct()
+```
+
+    
