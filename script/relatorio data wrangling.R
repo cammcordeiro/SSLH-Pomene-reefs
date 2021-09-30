@@ -16,7 +16,7 @@ library(iNEXT)
 
 # load files
 metadata <- read.xlsx("data/SS_Pomene data all 2019nov12.xlsx", sheet="metadata")
-fish1 <-read.xlsx("data/SS_Pomene data all 2019nov12.xlsx", sheet="fish data")
+fish1 <- read.xlsx("data/SS_Pomene data all 2019nov12.xlsx", sheet="fish data")
 macrofauna <- read.xlsx("data/SS_Pomene data bentos.xlsx", sheet=6)
 dados1 <- read.csv("data/bentos_quadrados_coral.csv", header = T) # bentos_quadrados_coral.csv usei esse
 
@@ -39,7 +39,7 @@ fish <- droplevels(subset(fish1, ! is.na(transect_number) & ! is.na(taxa_concat)
 fish$eventID <- paste(fish$eventDate,fish$locality,fish$site,sep = '_')
 fish$unique_eventID <- paste(fish$eventDate,fish$locality,fish$site,fish$collector,fish$transect_number, sep = '_')
 
-fish$locality <- mapvalues(fish$locality, from="Baixo Silva", to="Baixo Silvia")
+fish$locality <- plyr::mapvalues(fish$locality, from="Baixo Silva", to="Baixo Silvia")
 fish$locality <- factor(fish$locality, levels = c("Baixo Silvia","Pomene","Baixo Zambia","Baixo Africa"))
 
 
