@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 set.seed(13)
 
-source("~/github/script/relatorio data wrangling.R")
+source("script/relatorio data wrangling.R")
 
 library(patchwork)
 
@@ -250,24 +250,30 @@ fish_eveness <- data.frame(widef[,1:3], eveness = diversity(widef[,4:213])/log(s
 ##### Benthic cover
 # Benthos richness per site
 dados1 %>% 
-  mutate(uniqueID = paste(local, site, transecto, sep = "_")) %>% 
-  aggregate(spp.Name ~local, ., function(x) length(unique(x))) 
+  mutate(uniqueID = paste(locality, site, transecto, quadrat, sep = "_")) %>%
+  aggregate(spp.Name ~ locality, ., function(x) length(unique(x))) 
 
 # ANOVA benthos richness
 dados1 %>% 
-  mutate(uniqueID = paste(local, site, transecto, sep = "_")) %>% 
-  aggregate(spp.Name ~ uniqueID + local, ., function(x) length(unique(x))) %>%
-    mutate(local = mapvalues(local, from = "Zambia", to = "Baixo Zambia")) %>% 
-  aov(spp.Name ~ local, .) %>% TukeyHSD("local")
-  #glm(taxon ~ locality, ., family = 'poisson') %>% car::Anova()
-  
+  mutate(uniqueID = paste(locality, site, transecto, quadrat, sep = "_")) %>%
+  aggregate(spp.Name ~ uniqueID + locality + transecto, ., function(x) length(unique(x))) %>%
+  mutate(local = mapvalues(locality, from = "Zambia", to = "Baixo Zambia")) %>% 
+  lme4::lmer(spp.Name ~ locality + (1|transecto:locality), .) %>%
+  anova()
+
 # Evenness benthos ANOVA
-data.frame(wideb[,1:3], eveness=diversity(wideb[,4:81])/log(specnumber(wideb[,4:81]))) %>%
-  aov(eveness ~ locality, .) %>% TukeyHSD()
+data.frame(wideb[,1:5], eveness = diversity(wideb[,6:83])/log(specnumber(wideb[,6:83]))) %>%
+  lme4::lmer(eveness ~ locality + (1|transecto:locality), data = .) %>%
+  anova()
+  # aov(eveness ~ locality + transecto:locality, .) %>%
+  # TukeyHSD("locality")
+  # anova()
   
 # ANOVA benthos Simpson
-data.frame(wideb[,1:3], simpson=diversity(wideb[,4:81], index='simpson')) %>%
-  aov(simpson ~ locality, .) %>% TukeyHSD("locality")
+data.frame(wideb[,1:5], simpson = diversity(wideb[,6:83], index='simpson')) %>%
+  lme4::lmer(simpson ~ locality + (1|transecto:locality), data = .) %>%
+  anova()
+
 
 ## MACROFAUNA DENSITY
 macrofauna %>% 
@@ -575,15 +581,19 @@ benthos_mds + macro_mds + fish_mds + legenda_5 + plot_layout(ncol = 2)
 
 ## benthic cover
 #
-betadisper(vegdist(wideb[, 4:81], method = "euclidian"), group = wideb$locality) %>% anova() #TukeyHSD()
+betadisper(vegdist(wideb[, 6:83], method = "euclidian"), group = wideb$locality) %>% 
+  anova()
+  TukeyHSD()
 
 #
-adonis(wideb[, 4:81] ~ locality + depth_m, wideb, permutations = 4999, strata = wideb$site)
-
+adonis(wideb[, 6:83] ~ locality + depth_m + transecto:locality, wideb, 
+       permutations = 4999, 
+       method = "euclidian")
 
 ## megafauna 
 #
-betadisper(vegdist(wide_macro[, 4:29], method = "bray"), group = wide_macro$locality) %>% anova() #TukeyHSD()
+betadisper(vegdist(wide_macro[, 4:29], method = "bray"), group = wide_macro$locality) %>% 
+  anova() #TukeyHSD()
 
 #
 adonis(wide_macro[, 4:29] ~ locality, wide_macro, permutations = 4999, strata = wide_macro$site)
@@ -594,7 +604,7 @@ betadisper(vegdist(widef_sel[, 4:ncol(widef_sel)], method = "bray"), group = wid
   anova()
 
 # test multivariate variance
-adonis(widef_sel[, 4:39] ~ locality, widef_sel, permutations = 4999, strata = widef_sel$site) 
+adonis(widef_sel[, 4:ncol(widef_sel)] ~ locality, widef_sel, permutations = 4999, strata = widef_sel$site) 
 
 ```
 
