@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>The reefs</title>
+
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Mozambique reefs</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="reefs.html">The reefs</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="portuguese.html">Português</a>
+</li>
+<li>
+  <a href="index.html">English</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div id="reefs-description" class="section level2 unnumbered">
+<h2 class="unnumbered">Reefs description</h2>
+<div id="study-sites" class="section level3">
+<h3>Study sites</h3>
+<p>The surveyed area is located in the central region of the Inhambane Province and included a 56 km stretch of coastline with four shallow reef structures (Baixo Africa, Baixo Zambia, Pomene, and Baixo Silvia) indicated on navigation charts and known by local communities as fishing and diving operators. All reef formations are located between 0.5 to 6.5 kilometers from the shore (figure 1) and within a depth range from 5 to 32 meters. Ponta Pomene (herein called Pomene) and Baixo Zambia are sites previously known for diving activities (Pereira et al., 2018), while the reefs of Baixo Silvia and Baixo Africa had only recently been visited by recreational divers as reported by local fishermen. Previous to this study, there was no record or official registers considering those reefs (Baixo Africa and Baixo Silvia) in scientific surveys. <br><br></p>
+<div id="baixo-silvia" class="section level4">
+<h4>1) Baixo Silvia</h4>
+<p>Baixo Silvia is composed of three main reef structures connected by shallower flat areas located around 6 km from the shore and extending for 5.5 km. The highest structural complexity was found on the seaward edges of reefs, where formations drop from 8 to 28 meters. Some of the sampled points showed a more complex configuration forming small canyons (approximately 5 m wide, 6 m deep, 10 m long).</p>
+<center>
+<p><img src="figs/plate_baxo_silva.png" style="width:100%"/></p>
+</center>
+<p><strong>Baixo Silvia reef</strong>. (a) Reef flat with low coral cover, (b) reef flat with healthy and rich coral cover, (c) high complexity reefs on reef slope, and (d) low complexity reefs on reef slope. <br><br></p>
+</div>
+<div id="pomene" class="section level4">
+<h4>2) Pomene</h4>
+<p>Pomene reefs are located on the coast of the Reserva Nacional do Pomene - RNP, which has several small local communities, private residences, and a commercial lodge with diving facilities within its borders (MTADR, 2006). Coastal reefs are located from 500 to 1000 m off the coast and are the easiest to access among all surveyed areas. The reef is composed of two main groups (north and south) separated by 1 km of flat sand and scattered reef bommies. In general, all reefs from Pomene have high structural complexity, with vertical structures, arches, and canyons, especially in the northern area.</p>
+<center>
+<p><img src="figs/plate_ponta_pomene.png" style="width:100%"/></p>
+</center>
+<p><strong>Pomene reefs</strong>. (a) Reefs with low coral cover, (b) reef bolders, (c) arc formation, and (d) <em>Tubastraea</em> with entangled fishing line. <br><br></p>
+</div>
+<div id="baixo-zambia" class="section level4">
+<h4>3) Baixo Zambia</h4>
+<p>Baixo Zambia reefs are formed by a group of moderately complex reefs located at 6.5 km from the shoreline, with depths ranging from 7 to 24 m. The reefs extend for 1.8 km in length and approximately 700 m in width. Following the pattern observed at the other reef formations, higher structural complexity was found on the edges on the seaward side, while the leeward side has a flat surface with sparse coral colonies.</p>
+<center>
+<p><img src="figs/plate_baixo_zambia.png" style="width:100%"/></p>
+</center>
+<p><strong>Baixo Zambia reef</strong>. (a) Reef flat with low coral cover, (b) reef flat with healthy and rich coral cover, (c) high complexity reefs on reef slope, and (d) a piece of net rope entangled in the reef. <br><br></p>
+</div>
+<div id="baixo-africa" class="section level4">
+<h4>4) Baixo Africa</h4>
+<p>Baixo Africa reefs are grouped in a narrow formation following the coastline with a horseshoe shape on the north portion. Reefs are approximately 5 km distant from the shoreline and within a depth range from 7 to 24 m.</p>
+<center>
+<p><img src="figs/plate_baixo_africa.png" style="width:100%"/></p>
+</center>
+<p><strong>Baixo Africa reef</strong>. (a) Spur and groove formations on southern part, (b) example of reef slope on leeward side of reefs without coral cover, (c) high complexity reefs on reef flat, and (d) reef formations at seaward sides of reefs. <br><br></p>
+<hr />
+</div>
+</div>
+<div id="reef-fishes" class="section level3">
+<h3>Reef fishes</h3>
+<center>
+<p><img src="figs/plate_peixes.png" style="width:100%"/></p>
+</center>
+<p><strong>Example of reef fish species found at all four reefs surveyed</strong>. (a) <em>Bodianus diana</em>, (b) <em>Pygoplites diacanthus</em>, (c) <em>Aluterus scriptus</em>, (d) <em>Pseudanthias squamipinnis</em>, (e) unidentified Dasyatidae ray, (f) <em>Bodianus axillare</em>, (g) <em>Variola louti</em>, and (h) <em>Amphiprion allardi</em>. <br><br></p>
+<hr />
+</div>
+<div id="megafauna" class="section level3">
+<h3>Megafauna</h3>
+<p>The presence of humpback whales (<em>Megaptera novaeangliae</em>) seen in groups of mothers and calves and groups of dolphins (<em>Tursiops truncatus</em>) was constant during sampling. The Mozambique channel is a known migration corridor for humpback whales and the field work was done during the migration season, increasing the odds of those encounters. Hawksbill turtles (<em>Eretmochelys imbricata</em>) were observed resting and feeding at reefs, while loggerhead turtles (<em>Caretta caretta</em>) were observed mating in areas between Baixo Zambia and Baixo Silvia. These are indications that the region is used for feeding for all these groups above, and also for reproduction and nesting ground for sea turtles. Also, giant manta ray (<em>Mobula birostris</em>) and whale shark (<em>Rhincodon typus</em>) individuals were spotted in the sampled reefs, and although are known to occupy the Mozambique channel, their numbers are currently decreasing and they are currently classified as vulnerable and endangered by the IUCN Red List of Threatened Species. Although our investigation was focused on the description of reef fish and benthic assemblages, these observations of large vertebrates are relevant to environmental authorities and specialized researchers since few reports were registered in this part of the Mozambican coast. <br><br></p>
+<center>
+<img src="figs/turtle%20mating.JPG" style="width:60%"/> <img src="figs/turtle%20mating1.JPG" style="width:60%"/>
+</center>
+<center>
+Loggerhead turtles (<em>Careta caretta</em>) mating.(Photo: Augusto Nhampossa)
+</center>
+<p><br><br></p>
+<center>
+<img src="figs/eretmochelys.JPG" style="width:80%"/>
+</center>
+<center>
+Hawksbill turtle (<em>Eretmochelys imbricata</em>) resting in Baixo Zambia reef.
+</center>
+<p><br><br></p>
+<center>
+<img src="figs/Mobula%20birostris%20Ech%20nauc1.JPG" style="width:80%"/>
+</center>
+<center>
+Giant manta ray (<em>Mobula birostris</em>) in Baixo Zambia reef.
+</center>
+<p><br><br></p>
+<center>
+<img src="figs/IMG_9148.JPG" style="width:80%"/> <img src="figs/IMG_9560.JPG" style="width:80%"/>
+</center>
+<center>
+Humpback whales (<em>Megaptera novaeangliae</em>) at Baixo Africa.(Photo: Augusto Nhampossa)
+</center>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

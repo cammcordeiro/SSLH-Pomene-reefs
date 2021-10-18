@@ -1,0 +1,58 @@
+---
+output: 
+  html_document:
+    highlight: tango
+---
+
+```{=html}
+<style>
+body {
+text-align: justify}
+</style>
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Uncharted coral reefs from the Inhambane Province, Mozambique {.unnumbered}
+
+> Authors: Cesar A.M.M. Cordeiro, Marcos B. Lucena, Fenias Muhate, Kátia C.C. Capel
+
+------------------------------------------------------------------------
+
+Mozambique has the third-largest coastline in the western Indian Ocean with a large and diverse reef area. Those reefs provide food and income for a large proportion of coastal communities but remain scarcely studied. Yet, many threats such as repeated events of bleaching in the Western Indian Ocean, growing fishing pressure, and ongoing exploration of fossil fuels along the Mozambican coast pose a great challenge to the sustainable use of marine resources and services. Thus, there is an urgent need to register and monitor reef sites along the coast to provide reliable information and support management actions, including the evaluation of established marine protected areas effectiveness.
+
+In 2019, a group of four scientists from Mozambique and Brazil explored four uncharted shallow reefs (Baixo Africa, Baixo Zambia, Pomene and Baixo Silvia)in the central region of the Inhambane Province. We used scuba dive techniques and applied a series of methods involving fish and macroinvertebrates censuses, and also made benthic cover photographic registers to evaluate the actual status of local reef fauna.
+
+We observed a total of 209 different fish species along all sampled reefs, and Baixo Zambia reefs had the highest number of fish species (n = 136), although observed values were similar to all four reefs. Most of fish species found were planktivorous (n = 110) and invertivorous species (n = 70), and the remaining trophic groups (carnivores and herbivores) accounted for 40% of species total. Despite less diverse in species, carnivores (groupers and jacks) were often observed at all sampled reefs in considerable shallow depths (\< 10 m). Large groupers and large jacks are usually found in deeper reefs because of most of diving and fishing activities are concentrated historically in shallow areas.
+<br><br>
+
+
+<center>
+
+<img src="figs/diver census.JPG" style="width:70%"/>
+
+</center>
+<center>*Diver evaluating reef fish fauna*</center>
+<br><br>
+
+
+A total of 84 species of benthic invertebrates were identified, with 26 associated to mobile and sedentary species, and 58 representing sessile species. From those sessile species 46 were reef forming coral species. All surveyed reefs had no signs of bleaching, with few observations of recently dead or partially dead colonies. However, this may not be considered as a sign of poor water condition (e.g., eutrophication) or presence of chronic stressors, such as high temperatures because the few dead colonies were isolated, which might be a result of predation by the crown-of-thorns starfish. Still, the general health status of the coral fauna is good despite the low total cover.
+
+We observed a considerable density of fishes with large sizes (\> 50 cm) and negligible evidence of large impacts on coral formations which indicated a good conservation status of those areas. Based on these findings, a marine protected area was proposed for establishment in collaboration with environmental authorities and the local community.
+
+Considering the local the biodiversity and the importance of coral reef formations to the Mozambican economy and livelihood, conservation efforts should focus on monitoring and protecting reef areas, especially understudied reef structures. Efforts could be focused on the participation of local communities in programs including local ecological knowledge and the training of locals to help in monitoring efforts, participative management, and enforcement. This first assessment of fish and benthic diversities and composition will help future actions focused on sustainable use of coral reef resources and maintenance of ecosystem services, especially related to local food security, low impact tourism activities and biodiversity conservation.
+<br><br>
+
+>[Click here to access the video abstract](https://youtu.be/GPWY7l1iGdw)
+
+
+### Acknowledgements
+
+The authors are thankful to the Universidade Pedagógica de Maputo, especially to the Faculdade de Ciências Naturais e Matemática and the rector Dr. Jorge Ferrão for the support and partnership in this project. We are also thankful to WIORI (Western Indian Ocean Research Initiative), NATURA and AVM Consultores Lda for funding the expedition, and to Instituto Nacional de Investigação Pesqueira for the research permit. We are also grateful to The Santuário Bravio de Vilanculos, the Msasa House (VCWS - Mr. Hugh Brown), Mr. Grenville Wilson and the crew of HQ2 for their support. Also, we acknowledge Mr. Augusto Nhampossa for his great assistance with all scientific activities.
+
+------------------------------------------------------------------------
+
+**Citation**: [C.A.M.M. Cordeiro, M.B. Lucena, F. Muhate, K.C.C. Capel (2021) Uncharted coral reefs from the Inhambane Province, Mozambique. *Regional Studies in Marine Science*, 102037](https://doi.org/10.1016/j.rsma.2021.102037) The full publication can be accessed in the following [link](doi:%20https://doi.org/10.1016/j.rsma.2021.102037). 
+<br><br>
+*Contact*: Cesar Cordeiro - cammcordeiro@id.uff.br

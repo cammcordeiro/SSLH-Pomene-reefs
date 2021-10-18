@@ -1,0 +1,16 @@
+name: "Moz Reefs"
+navbar:
+  title: "Mozambique reefs"
+  left:
+    - text: "The reefs"
+      href: reefs.html
+  right:
+    - text: "Português"
+      href: portuguese.html
+    - text: "English"
+      href: index.html
+
+output_dir: "."
+output:
+  html_document:
+    highlight: tango
