@@ -16,6 +16,39 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The surveyed area is located in the central region of the Inhambane Province and included a 56 km stretch of coastline with four shallow reef structures (Baixo Africa, Baixo Zambia, Pomene, and Baixo Silvia) indicated on navigation charts and known by local communities as fishing and diving operators. All reef formations are located between 0.5 to 6.5 kilometers from the shore (figure 1) and within a depth range from 5 to 32 meters. Ponta Pomene (herein called Pomene) and Baixo Zambia are sites previously known for diving activities (Pereira et al., 2018), while the reefs of Baixo Silvia and Baixo Africa had only recently been visited by recreational divers as reported by local fishermen. Previous to this study, there was no record or official registers considering those reefs (Baixo Africa and Baixo Silvia) in scientific surveys. <br><br>
 
+```{r, echo=FALSE, message=FALSE}
+
+library(tidyverse)
+library(openxlsx)
+library(leaflet)
+
+metadata <- read.xlsx("data/SS_Pomene data all 2019nov12.xlsx", sheet="metadata") %>% 
+  mutate(site = plyr::mapvalues(site, from = c("Baixo Silva Norte",        "Baixo Silva Sul", "Baixo Silva Norte caderno", "Baixo Silva dentro 1", "Baixo Silva 2", "Ponta Pomene Meio", "Pomene Norte 3", "Ponta Pomene Sul provável", "Ponta Pomene Norte", "Baixo Zambia Sul GPS", "Baixo Zambia Sul", "Baixo Zambia 1", "Baixo Zambia 2", "Baixo Zambia 3", "Baixo Africa Sul", "Baixo Africa Norte",  "Baixo Africa 1", "Baixo Africa 2", "Baixo Africa 3", "Amphitheater south 1", "Amphitheater south 2", "Blue fin", "2 Mile inside", "2 Mile outside", "Amphitheater"), to = c(rep("Baixo Silvia", 5), rep("Pomene", 4), rep("Baixo Zambia", 5), rep("Baixo Africa", 5), rep(NA, 6))),
+         site = factor(site, levels = c("Baixo Silvia", "Pomene", "Baixo Zambia", "Baixo Africa"))) %>% 
+  filter(!is.na(site)) %>%
+  select(site, lat, lon) %>% 
+  distinct() 
+
+pal <- colorFactor(palette = "viridis", domain = unique(metadata$site))
+
+metadata %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addCircleMarkers(~lon,
+                   ~lat,
+                   radius = 5,
+                   label = ~site,
+                   color = ~pal(metadata$site),
+                   stroke = FALSE, fillOpacity = 0.5) %>% 
+  addLegend('bottomright', 
+            colors = unique(pal(metadata$site)), 
+            labels = unique(metadata$site),
+            title = 'Dataset',
+            opacity = 0.5)
+```
+<center>*Interative map of surveyed reef*</center>
+<br><br>
+
 #### 1) Baixo Silvia
 
 Baixo Silvia is composed of three main reef structures connected by shallower flat areas located around 6 km from the shore and extending for 5.5 km. The highest structural complexity was found on the seaward edges of reefs, where formations drop from 8 to 28 meters. Some of the sampled points showed a more complex configuration forming small canyons (approximately 5 m wide, 6 m deep, 10 m long).
